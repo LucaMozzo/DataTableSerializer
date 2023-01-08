@@ -1,5 +1,4 @@
 ﻿using DataTableSerializer.Exceptions;
-using DbDataReaderMapper;
 using System;
 using System.Collections.Generic;
 using System.Data;

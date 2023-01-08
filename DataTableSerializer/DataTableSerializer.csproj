@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Title>DataTableSerializer</Title>
-    <Version>0.2</Version>
-    <Description>Added property transformer</Description>
+    <Version>0.2.1</Version>
+    <Description>Fixed namespace error</Description>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/LucaMozzo/DataTableSerializer</RepositoryUrl>

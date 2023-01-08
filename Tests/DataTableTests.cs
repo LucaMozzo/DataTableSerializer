@@ -2,7 +2,6 @@ using System.Data;
 using Tests.Models;
 using DataTableSerializer;
 using DataTableSerializer.Exceptions;
-using DbDataReaderMapper;
 
 namespace Tests
 {

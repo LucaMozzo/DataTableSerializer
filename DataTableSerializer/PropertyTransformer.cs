@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DbDataReaderMapper
+namespace DataTableSerializer
 {
     public class PropertyTransformer
     {
