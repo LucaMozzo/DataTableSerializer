@@ -1,15 +1,16 @@
 ﻿using DataTableSerializer.Exceptions;
+using DbDataReaderMapper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Reflection;
 
 namespace DataTableSerializer
 {
     internal static class DataTableHelper
     {
-        internal static void GenerateDataTableColumnsFromObject<T>(DataTable dataTable)
+        internal static void GenerateDataTableColumnsFromObject<T>(DataTable dataTable, PropertyTransformer propertyConverter)
         {
             PropertyInfo[] typeProperties = typeof(T).GetProperties();
             bool namesClash = IsDataTableColumnNamesClash(typeProperties);
@@ -22,11 +23,13 @@ namespace DataTableSerializer
 
             foreach (var property in typeProperties)
             {
-                dataTable.Columns.Add(GetDataTableTargetColumnName(property), property.PropertyType);
+                string resolvedName = GetDataTableTargetColumnName(property);
+                Type resolvedType = GetDataTableTargetColumnType(property, propertyConverter);
+                dataTable.Columns.Add(resolvedName, resolvedType);
             }
         }
 
-        internal static void FillTable<T>(DataTable dataTable, IEnumerable<T> values)
+        internal static void FillTable<T>(DataTable dataTable, IEnumerable<T> values, PropertyTransformer propertyConverter)
         {
             PropertyInfo[] typeProperties = typeof(T).GetProperties();
 
@@ -36,10 +39,21 @@ namespace DataTableSerializer
                 for (int i = 0; i < typeProperties.Length; ++i) 
                 {
                     var propertyValue = typeProperties[i].GetValue(value);
+                    if (propertyConverter != null && propertyConverter[typeProperties[i]] != null)
+                    {
+                        propertyValue = propertyConverter[typeProperties[i]].DynamicInvoke(propertyValue);
+                    }
                     itemsArray[i] = propertyValue;
                 }
                 dataTable.Rows.Add(itemsArray);
             }
+        }
+
+        private static Type GetDataTableTargetColumnType(PropertyInfo property, PropertyTransformer propertyConverter
+            )
+        {
+            var resolvedType = propertyConverter?.GetOutputType(property);
+            return resolvedType ?? property.PropertyType;
         }
 
         private static string GetDataTableTargetColumnName(PropertyInfo property)
@@ -71,6 +85,18 @@ namespace DataTableSerializer
             }
 
             return false;
+        }
+
+        private static string GetDataTableTransformedValue(PropertyInfo property)
+        {
+            var attributes = property.GetCustomAttributes(true);
+            var customName = attributes
+                .Select(attr => attr as DataTableColumnNameAttribute)
+                .Where(attr => attr != null)
+                .Select(attr => attr.Name)
+                .FirstOrDefault();
+
+            return customName ?? property.Name;
         }
     }
 }

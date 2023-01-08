@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Title>DataTableSerializer</Title>
-    <Version>0.1</Version>
-    <Description>An object serializer to DataTable</Description>
+    <Version>0.2</Version>
+    <Description>Added property transformer</Description>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/LucaMozzo/DataTableSerializer</RepositoryUrl>
